@@ -1,0 +1,17 @@
+//the diagram was made using websequencediagrams service as follows:
+
+note over browser:
+user fills in new note in the text field
+and saves it. browser executes the event handler
+that add the new note to the existing list, 
+rerenders the note list on the page, and 
+sends the new note to the server.
+end note
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+
+note over server:
+server creates the new note 
+end note
+
+server-->browser: Responds with HTTP status code 201 ({"message":"note created"})
