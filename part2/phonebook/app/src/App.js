@@ -58,7 +58,7 @@ const App = () => {
             setNewNumber('')
           })
           .catch(error => {
-            setErrorMessage(`Update failed with error: ${error}`)
+            setErrorMessage(`Update failed with error: ${error.response.data.error || error}`)
             setTimeout(() => {
               setErrorMessage(null)
             }, 10000);
@@ -80,7 +80,7 @@ const App = () => {
           setNewNumber('')
         })
         .catch(error => {
-          setErrorMessage(`Save failed with error: ${error}`)
+          setErrorMessage(`Save failed with error: ${error.response.data.error || error}`)
           setTimeout(() => {
             setErrorMessage(null)
           }, 10000);
