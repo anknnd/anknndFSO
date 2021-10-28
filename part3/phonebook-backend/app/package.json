@@ -6,13 +6,20 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:ui": "rm -rf build && cd ../../../part2/phonebook/app/ && npm run build --prod && mv build ../../../part3/phonebook-backend/app",
+    "deploy": "git push heroku deploy:main",
+    "deploy:cleanup": "git checkout -b deploy && npm run build:ui && mv ./* ../../../ && cd ../../../ && rm -rf docs part*",
+    "deploy:full": "npm run deploy:cleanup && git add . && git commit -m uibuild && npm run deploy",
+    "logs:prod": "heroku logs --tail"
   },
   "author": "anknnd",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "mongoose": "^6.0.12",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
