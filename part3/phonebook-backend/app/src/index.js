@@ -1,8 +1,8 @@
 require('dotenv').config()
-const express = require('express');
-const app = express();
+const express = require('express')
+const app = express()
 const cors = require('cors')
-const morgan = require('morgan');
+const morgan = require('morgan')
 
 const Person = require('./models/person')
 
@@ -15,23 +15,23 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 app.get('/info', (req, res) => {
   Person.find({}).then(persons => { res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`) })
-});
+})
 
 app.get('/api/persons', (req, res) => {
   Person.find({}).then(persons => { res.json(persons) })
-});
+})
 
 app.post('/api/persons', (req, res, next) => {
   const body = req.body
 
   if (!body.name) {
     res.statusMessage = 'name must be defined'
-    return res.status(400).json({ error: res.statusMessage });
+    return res.status(400).json({ error: res.statusMessage })
   }
 
   if (!body.number) {
     res.statusMessage = 'number must be defined'
-    return res.status(400).json({ error: res.statusMessage });
+    return res.status(400).json({ error: res.statusMessage })
   }
 
   const person = new Person({
@@ -42,20 +42,20 @@ app.post('/api/persons', (req, res, next) => {
   person.save()
     .then(savedPerson => { res.json(savedPerson) })
     .catch(error => { next(error) })
-});
+})
 
 app.get('/api/persons/:id', (req, res, next) => {
   Person.findById(req.params.id)
     .then(person => {
       if (person) {
-        res.json(person);
+        res.json(person)
       }
       else {
-        res.status(404).end();
+        res.status(404).end()
       }
     })
     .catch(error => { next(error) })
-});
+})
 
 app.put('/api/persons/:id', (req, res, next) => {
   const body = req.body
@@ -70,7 +70,7 @@ app.put('/api/persons/:id', (req, res, next) => {
       res.json(updatedPerson)
     })
     .catch(error => next(error))
-});
+})
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
@@ -86,8 +86,8 @@ const errorHandler = (error, req, res, next) => {
   if (error.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id' })
   }
-  else if (error.name === 'ValidationError') { 
-    return res.status(400).json({ error: error.message }) 
+  else if (error.name === 'ValidationError') {
+    return res.status(400).json({ error: error.message })
   }
 
   next(error)
@@ -95,7 +95,7 @@ const errorHandler = (error, req, res, next) => {
 
 app.use(errorHandler)
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)
-});
+})
