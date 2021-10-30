@@ -8,9 +8,9 @@
     "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:ui": "rm -rf build && cd ../../../part2/phonebook/app/ && npm run build --prod && mv build ../../../part3/phonebook-backend/app",
-    "deploy": "git push heroku deploy:main",
-    "deploy:cleanup": "git checkout -b deploy && npm run build:ui && mv ./* ../../../ && cd ../../../",
-    "deploy:full": "npm run deploy:cleanup && git add . && git commit -m uibuild && npm run deploy",
+    "deploy": "git push -f heroku deploy:main",
+    "deploy:cleanup": "git checkout -b deploy && npm run build:ui && mv ./* ../../../",
+    "deploy:full": "npm run deploy:cleanup && git add ../../../. && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail",
     "lint": "eslint ."
   },
