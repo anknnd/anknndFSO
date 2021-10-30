@@ -10,15 +10,14 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [showLike, setShowLike] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)  
-  const [successMessage, setSuccessMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
 
   const hook = () => {
     personService
       .getAll()
       .then(persons => {
         setPersons(persons)
-        console.log(persons)
+        //console.log(persons)
       })
   }
 
@@ -43,24 +42,24 @@ const App = () => {
 
     //simple version. can further use regex to match with case-insensitivity and omit non-alphanumeric characters for a more robust comparison
     if (persons.filter(person => person.name === newName).length > 0) {
-      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         const existingPerson = persons.find(person => person.name === newName);
         const nameObject = { ...existingPerson, number: newNumber }
         personService
           .update(existingPerson.id, nameObject)
           .then(updatedObject => {
-            setSuccessMessage(`Updated ${updatedObject.name}`)
+            setNotification({ message: `Updated ${updatedObject.name}`, type: 'success' })
             setTimeout(() => {
-              setSuccessMessage(null)
+              setNotification(null)
             }, 5000);
             setPersons(persons.map(p => p.id === existingPerson.id ? updatedObject : p))
             setNewName('');
             setNewNumber('')
           })
           .catch(error => {
-            setErrorMessage(`Update failed with error: ${error.response.data.error || error}`)
+            setNotification({ message: `Update failed with error: ${error.response.data.error || error}`, type: 'error' })
             setTimeout(() => {
-              setErrorMessage(null)
+              setNotification(null)
             }, 10000);
           })
       }
@@ -71,39 +70,39 @@ const App = () => {
       personService
         .create(nameObject)
         .then(createdObject => {
-          setSuccessMessage(`Added ${nameObject.name}`)
-            setTimeout(() => {
-              setSuccessMessage(null)
-            }, 5000);
+          setNotification({ message: `Added ${nameObject.name}`, type: 'success' })
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000);
           setPersons(persons.concat(createdObject))
           setNewName('')
           setNewNumber('')
         })
         .catch(error => {
-          setErrorMessage(`Save failed with error: ${error.response.data.error || error}`)
+          setNotification({ message: `Save failed with error: ${error.response.data.error || error}`, type: 'error' })
           setTimeout(() => {
-            setErrorMessage(null)
+            setNotification(null)
           }, 10000);
         })
     }
   }
 
   const handleDelete = (person) => {
-    if(window.confirm(`Delete ${person.name}`)){
+    if (window.confirm(`Delete ${person.name}`)) {
       personService
         .deleteAction(person.id)
         .then(res => {
           console.log(res);
-          setSuccessMessage(`Deleted ${person.name}`)
-            setTimeout(() => {
-              setSuccessMessage(null)
-            }, 5000);
+          setNotification({ message: `Deleted ${person.name}`, type: 'success' })
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000);
           setPersons(persons.filter(p => p.id !== person.id))
         })
         .catch(error => {
-          setErrorMessage(`${person.name} already deleted.`)
+          setNotification({ message: `${person.name} already deleted.`, type: 'error' })
           setTimeout(() => {
-            setErrorMessage(null)
+            setNotification(null)
           }, 10000);
           setPersons(persons.filter(p => p.id !== person.id))
         })
@@ -113,8 +112,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={errorMessage} type="error" />      
-      <Notification message={successMessage} />
+      <Notification message={notification?.message} type={notification?.type} />
       <Filter showLike={showLike} handleShowLikeChange={handleShowLikeChange} />
       <h2>add a new</h2>
       <PersonForm handleSubmit={handleSubmit} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
