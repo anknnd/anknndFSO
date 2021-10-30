@@ -16,6 +16,16 @@ Content-Type: application/json
 
 ###
 
+PUT http://localhost:3001/api/persons/617ccd47acd3b182892e80c7
+Content-Type: application/json
+
+{
+  "name": "Katie Holmes",
+  "number": "012 44-45607"
+}
+
+###
+
 GET http://localhost:3001/api/persons/6178fc48b40ce3e6583ae6e5
 
 ###

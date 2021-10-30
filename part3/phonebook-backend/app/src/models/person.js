@@ -21,12 +21,7 @@ const personSchema = new mongoose.Schema({
     },
     number: {
         type: String,
-        validate: {
-            validator: function (v) {
-                return /^\d([- ]?\d){7,}$/gm.test(v);
-            },
-            message: props => `${props.value} is not a valid phone number. The phone number must have at least 8 digits separated by space or hyphen.`
-        },
+        validate: [new RegExp(/^\d([- ]?\d){7,}$/), '{VALUE} is not a valid phone number. The phone number must have at least 8 digits separated by space or hyphen.'],
         required: true
     }
 })
